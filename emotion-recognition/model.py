@@ -50,6 +50,8 @@ else:
 X_train = X_train.astype('float32')
 X_test = X_test.astype('float32')
 
+
+
 print X_train.shape
 print X_test.shape
 
@@ -64,6 +66,7 @@ y_test = np_utils.to_categorical(y_test)
 num_classes = y_test.shape[1]
 
 # Create the model
+'''
 model = Sequential()
 model.add(Convolution2D(32, 3, 3, input_shape=(3, 32, 32), border_mode='same', activation='relu', W_constraint=maxnorm(3)))
 model.add(Dropout(0.2))
@@ -73,6 +76,18 @@ model.add(Flatten())
 model.add(Dense(512, activation='relu', W_constraint=maxnorm(3)))
 model.add(Dropout(0.5))
 model.add(Dense(num_classes, activation='softmax'))
+'''
+
+model = Sequential()
+model.add(Convolution2D(32, 5, 5, input_shape=(1, 32, 32), border_mode='same', activation='relu', W_constraint=maxnorm(3)))
+model.add(Dropout(0.2))
+model.add(Convolution2D(32, 5, 5, activation='relu', border_mode='same', W_constraint=maxnorm(3)))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Flatten())
+model.add(Dense(512, activation='relu', W_constraint=maxnorm(3)))
+model.add(Dropout(0.5))
+model.add(Dense(num_classes, activation='softmax'))
+
 
 
 t0 = time()

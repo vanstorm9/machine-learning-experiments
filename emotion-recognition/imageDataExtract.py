@@ -39,15 +39,15 @@ def load_data():
 		for files in os.listdir(root_path + folders):
 			imgO = Image.open(root_path + folders + files)
 			img = np.array(imgO).transpose()
-		
+
 		
 			if i == 0:
 				# This is our first time with the image, so we initalize our main array
-				main_ar = np.array([img])
+				main_ar = np.array([[img]])
 				label = np.array([labelnum])
 			else:
 				# We will just concatenate the array then
-				main_ar = np.concatenate(([img], main_ar))
+				main_ar = np.concatenate(([[img]], main_ar))
 				label = np.concatenate((label, [labelnum]))
 
 			# Adding our label array
@@ -98,8 +98,9 @@ def load_data_no_cross():
 		
 			if i == 0:
 				# This is our first time with the image, so we initalize our main array
-				main_ar = np.array([img])
 				label = np.array([labelnum])
+
+				print main_ar.shape
 			else:
 				# We will just concatenate the array then
 				main_ar = np.concatenate(([img], main_ar))
