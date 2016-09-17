@@ -94,7 +94,7 @@ t0 = time()
 
 
 # Compile model
-epochs = 25
+epochs = 1000
 lrate = 0.01
 decay = lrate/epochs
 sgd = SGD(lr=lrate, momentum=0.9, decay=decay, nesterov=False)
