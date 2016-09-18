@@ -30,7 +30,7 @@ for folders in root:
 		
 		img2 = img.resize((new_width, new_height), Image.ANTIALIAS)
 
-		saveStr = "../images/" + folders + str(i) + ".jpg"
+		saveStr = root_path + folders + files
 		img2.save(saveStr)
 		i = i + 1
 
