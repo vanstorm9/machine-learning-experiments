@@ -24,8 +24,6 @@ for folders in root:
 	i = 0
 	for files in os.listdir(root_path + slash + folders):
 		img = Image.open(root_path + folders + files)
-		width = img.size[0]
-		height = img.size[1]
 
 		
 		img2 = img.resize((new_width, new_height), Image.ANTIALIAS)

@@ -17,13 +17,23 @@ from sklearn.metrics import confusion_matrix
 
 import imageDataExtract as dataset
 
+
+# For recording
+import cv2
+from PIL import Image
+
 # fix random seed for reproducibility
 seed = 7
 numpy.random.seed(seed)
 
+while True:
+	print 'Press [p] for path or [v] for video'
+	mode = raw_input()
+
+	if mode == 'p' or mode == 'v':
+		break
+
 # load data
-#imgPath = 'images/happy/3_0_49.png'
-#imgPath = 'images/angry/nhan_0_9.png'
 imgPath = 'images/sad/anthony_0_9.png'
 num_classes = 3
 
@@ -72,26 +82,101 @@ model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy
 # Final evaluation of the model
 pred = model.predict_classes(img, 1, verbose=0)
 
-print output[pred[0]]
-print ''
-print ''
-print ''
+#print output[pred[0]]
+#print ''
+#print ''
+#print ''
 
-while True:
-	print 'Type in another path to make a prediction:'
-	path = raw_input()
 
-	img = dataset.pathToVector(path)
+if mode == 'p':
+	while True:
+		print 'Type in another path to make a prediction:'
+		path = raw_input()
 
-	# normalize inputs from 0-255 to 0.0-1.0
-	img = img.astype('float32')
+		img = dataset.pathToVector(path)
 
+		# normalize inputs from 0-255 to 0.0-1.0
+		img = img.astype('float32')
+
+		
+		# Final evaluation of the model
+		pred = model.predict_classes(img, 1, verbose=0)
+
+		print output[pred[0]]
+		print ''
+		print ''
+		print ''
+
+elif mode == 'v':
+
+	tar_height = 32
+	tar_width = 32
+
+
+	face_classifier = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_default.xml')
+	cap = cv2.VideoCapture(0)
+
+	i = 0
+
+	while True:
+		print 'Press enter to start recording: '
+		temp = raw_input()
+
+
+		while True:
+		    
+		    ret, old_frame = cap.read()
+
+		    '''
+		    cv2.imshow('Video', old_frame)
+		    if cv2.waitKey(1) & 0xFF==ord('q'):
+			break
+		    '''
+
+
+		    old_gray = cv2.cvtColor(old_frame, cv2.COLOR_BGR2GRAY)
+		    face = face_classifier.detectMultiScale(old_frame, 1.2, 4)
+
+		    if len(face) == 0:
+			continue
+		    else: 
+			print 'Detected'
+			for (x,y,w,h) in face:
+			    #focused_face = old_frame[y: y+h, x: x+w]
+			    img = old_gray[y: y+h, x: x+w]
+			    #cv2.rectangle(old_frame, (x,y), (x+w, y+h), (0,255,0),2)
+
+
+				
+                            pil_im = Image.fromarray(img)
+			    img2 = pil_im.resize((32, 32), Image.ANTIALIAS)
+
+			    img2.save('1.png')
+				
+			    cvimg = numpy.array(img2.convert('RGB'))
+			    img = cv2.cvtColor(cvimg[:, :, ::-1].copy(), cv2.COLOR_BGR2GRAY)
 	
-	# Final evaluation of the model
-	pred = model.predict_classes(img, 1, verbose=0)
+			    print img.shape
+	
+			    img = numpy.array([numpy.array([img])])			
+			    	
+		
+			    # normalize inputs from 0-255 to 0.0-1.0
+			    img = img.astype('float32')
 
-	print output[pred[0]]
-	print ''
-	print ''
-	print ''
+			
+			    # Final evaluation of the model
+				
+			    json = open("./test.json", "w")
+			    
+			    pred = model.predict_classes(img, 1, verbose=0)
 
+			    print i, ' ', output[pred[0]]
+			    print ''
+			    print ''
+			    print ''
+			
+			    strTemp = '{\n "classification": "' + output[pred[0]] + '"\n}\n'
+			    json.write(strTemp)
+			    json.close()
+			    i = i + 1
