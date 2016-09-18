@@ -64,8 +64,8 @@ model.add(Dense(num_classes, activation='softmax'))
 
 
 
-#model.load_weights("models/model-0.h5")
-model.load_weights("checkpoint/weights-improvement-75-0.1966-bigger.hdf5")
+model.load_weights("models/model-0.h5")
+#model.load_weights("checkpoint/weights-improvement-75-0.1966-bigger.hdf5")
 
 # Compile model
 
