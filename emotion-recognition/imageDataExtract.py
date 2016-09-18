@@ -121,3 +121,9 @@ def load_data_no_cross():
 	print 'Successfully saved numpy arrays!'
 
 	return main_ar, label
+
+# To allow us to convert single image into a vector
+def pathToVector(path):
+	imgO = Image.open(path)
+	return np.array([np.array([np.array(imgO).transpose()])])
+

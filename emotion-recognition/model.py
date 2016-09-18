@@ -11,6 +11,7 @@ from keras.constraints import maxnorm
 from keras.optimizers import SGD
 from keras.layers.convolutional import Convolution2D
 from keras.layers.convolutional import MaxPooling2D
+from keras.callbacks import ModelCheckpoint
 from keras.utils import np_utils
 
 from sklearn.metrics import confusion_matrix
@@ -94,15 +95,19 @@ t0 = time()
 
 
 # Compile model
-epochs = 1000
+epochs = 200
 lrate = 0.01
 decay = lrate/epochs
 sgd = SGD(lr=lrate, momentum=0.9, decay=decay, nesterov=False)
 model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
 print(model.summary())
 
+filepath="checkpoint/weights-improvement-{epoch:02d}-{loss:.4f}-bigger.hdf5"
+checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
+callbacks_list = [checkpoint]
+
 # Fit the model
-history = model.fit(X_train, y_train, validation_data=(X_test, y_test), nb_epoch=epochs, batch_size=32)
+history = model.fit(X_train, y_train, validation_data=(X_test, y_test), nb_epoch=epochs, batch_size=32, callbacks=callbacks_list)
 
 print 'Training time:'
 total_time = time() - t0

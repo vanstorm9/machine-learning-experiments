@@ -46,7 +46,7 @@ num_classes = y_test.shape[1]
 
 # Create the model
 model = Sequential()
-model.add(Convolution2D(32, 3, 3, input_shape=(3, 32, 32), border_mode='same', activation='relu', W_constraint=maxnorm(3)))
+model.add(Convolution2D(32, 3, 3, input_shape=(1, 32, 32), border_mode='same', activation='relu', W_constraint=maxnorm(3)))
 model.add(Dropout(0.2))
 model.add(Convolution2D(32, 3, 3, activation='relu', border_mode='same', W_constraint=maxnorm(3)))
 model.add(MaxPooling2D(pool_size=(2, 2)))
@@ -58,7 +58,8 @@ model.add(Dense(num_classes, activation='softmax'))
 
 t0 = time()
 
-model.load_weights("models/model-0.h5")
+#model.load_weights("models/model-0.h5")
+model.load_weights("checkpoint/weights-improvement-75-0.1966-bigger.hdf5")
 
 # Compile model
 
